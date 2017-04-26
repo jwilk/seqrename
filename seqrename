@@ -1,0 +1,75 @@
+#!/bin/sh
+
+# Copyright © 2017 Jakub Wilk <jwilk@jwilk.net>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the “Software”), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+set -e -u
+
+usage()
+{
+    printf '%s --format=FORMAT [--start=N] [--step=N] <file>...\n' "$0"
+}
+
+args=$(getopt -n "$0" -o 'h' --long 'help,format:,start:,step:' -- "$@")
+if [ $? -ne 0 ]
+then
+    usage >&2
+    exit 1
+fi
+format=
+start=1
+step=1
+eval set -- "$args"
+while true
+do
+    case "$1" in
+        -h|--help) usage; exit 0;;
+        --format) format="$2"; shift 2;;
+        --start) start="$2"; start=$((start)); shift 2;;
+        --step) step="$2"; step=$((step)); shift 2;;
+        --) shift; break;;
+        *) printf '%s: internal error (%s)\n' "$0" "$1" >&2; exit 1;;
+    esac
+done
+if [ -z "$format" ]
+then
+    usage >&2
+    exit 1
+fi
+(
+    set -C
+    n="$start"
+    for file in "$@"
+    do
+        newname=$(printf "$format" "$n")
+        stat "$file" > /dev/null
+        : > "$newname"
+        n=$((n + step))
+    done
+)
+n="$start"
+for file in "$@"
+do
+    newname=$(printf "$format" "$n")
+    mv "$file" "$newname"
+    n=$((n + step))
+done
+
+# vim:ts=4 sts=4 sw=4 et
