@@ -27,12 +27,10 @@ usage()
     printf 'Usage: %s --format=FORMAT [--start=N] [--step=N] FILE...\n' "${0##*/}"
 }
 
-args=$(getopt -n "$0" -o 'h' --long 'help,format:,start:,step:' -- "$@")
-if [ $? -ne 0 ]
-then
+args=$(getopt -n "$0" -o 'h' --long 'help,format:,start:,step:' -- "$@") || {
     usage >&2
     exit 1
-fi
+}
 format=
 start=1
 step=1
