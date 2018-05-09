@@ -1,0 +1,11 @@
+.. code:: console
+
+   $ seqrename --help
+   Usage: seqrename --format=FORMAT [--start=N] [--step=N] FILE...
+   $ ls
+   bar  baz  foo
+   $ seqrename --format=f%04d *
+   $ ls
+   f0001  f0002  f0003
+
+.. vim:ft=rst ts=3 sts=3 sw=3 et
