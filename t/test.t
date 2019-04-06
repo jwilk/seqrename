@@ -5,11 +5,17 @@
 
 set -e -u
 echo 1..1
-pwd="$PWD"
+here=$(dirname "$0")
+base="$here/.."
+if [ "${base#/}" = "${base}" ]
+then
+    base="${base#./}"
+    base="$PWD/$base"
+fi
 tmpdir=$(mktemp -d -t lddot.XXXXXX)
 cd "$tmpdir"
 touch foo bar baz
-"$pwd/seqrename" --format=f%04d *
+"$base/seqrename" --format=f%04d *
 exp='f0001 f0002 f0003'
 diff=$(diff -u <(ls) <(printf '%s\n' $exp)) || true
 if [ -n "$diff" ]
