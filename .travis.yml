@@ -3,12 +3,7 @@ language: generic
 install:
 - python -m pip install --user pygments restructuredtext-lint
 script:
-- mkdir test
-- pushd test
-- touch foo bar baz
-- ../seqrename --format=f%04d *
-- ls f0001 f0002 f0003
-- popd
+- prove -v
 - shellcheck seqrename
 - restructuredtext-lint --encoding=UTF-8 README
 
