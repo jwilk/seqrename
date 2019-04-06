@@ -59,7 +59,7 @@ fi
         # shellcheck disable=SC2059
         newname=$(printf "$format" "$n")
         stat "$file" > /dev/null
-        : > "$newname"
+        true > "$newname"
         n=$((n + step))
     done
 )
