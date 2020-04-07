@@ -12,7 +12,7 @@ then
     base="${base#./}"
     base="$PWD/$base"
 fi
-tmpdir=$(mktemp -d -t lddot.XXXXXX)
+tmpdir=$(mktemp -d -t seqrename.XXXXXX)
 cd "$tmpdir"
 touch foo bar baz
 "$base/seqrename" --format=f%04d *
