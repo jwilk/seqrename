@@ -5,8 +5,7 @@
 
 set -e -u
 echo 1..1
-here=$(dirname "$0")
-base="$here/.."
+base="${0%/*}/.."
 if [ "${base#/}" = "${base}" ]
 then
     base="${base#./}"
